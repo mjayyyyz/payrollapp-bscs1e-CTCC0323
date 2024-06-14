@@ -42,6 +42,15 @@ class PayrollSystem {
         employeeRateDropdown.setBounds(400, 10, 160, 25);
         panel.add(employeeRateDropdown);
 
+        // Pay period dropdown
+        JLabel payPeriodLabel = new JLabel("Pay Period");
+        payPeriodLabel.setBounds(300, 40, 100, 25);
+        panel.add(payPeriodLabel);
+
+        JComboBox<String> payPeriodDropdown = new JComboBox<>(new String[]{"June 1-15", "June 16-30"});
+        payPeriodDropdown.setBounds(400, 40, 160, 25);
+        panel.add(payPeriodDropdown);
+
         // Regular & Over Time Pay Panel
         JPanel regularPanel = new JPanel();
         regularPanel.setBorder(BorderFactory.createTitledBorder("Regular & Over Time Pay"));
@@ -159,6 +168,44 @@ class PayrollSystem {
         captureButton.setBounds(350, 400, 100, 25);
         panel.add(captureButton);
 
+        // Add logic to show/hide deduction fields based on pay period selection
+        payPeriodDropdown.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    boolean isJune16to30 = "June 16-30".equals(payPeriodDropdown.getSelectedItem());
+                    sssLabel.setVisible(isJune16to30);
+                    sssField.setVisible(isJune16to30);
+                    philHealthLabel.setVisible(isJune16to30);
+                    philHealthField.setVisible(isJune16to30);
+                    pagibigLabel.setVisible(isJune16to30);
+                    pagibigField.setVisible(isJune16to30);
+                    otherDeductionLabel.setVisible(isJune16to30);
+                    otherDeductionField.setVisible(isJune16to30);
+                    totalDeductionLabel.setVisible(isJune16to30);
+                    totalDeductionField.setVisible(isJune16to30);
+                    netPayLabel.setVisible(isJune16to30);
+                    netPayField.setVisible(isJune16to30);
+                }
+            }
+        });
+
+        // Initially hide the deduction fields if "June 1-15" is selected by default
+        if (!"June 16-30".equals(payPeriodDropdown.getSelectedItem())) {
+            sssLabel.setVisible(false);
+            sssField.setVisible(false);
+            philHealthLabel.setVisible(false);
+            philHealthField.setVisible(false);
+            pagibigLabel.setVisible(false);
+            pagibigField.setVisible(false);
+            otherDeductionLabel.setVisible(false);
+            otherDeductionField.setVisible(false);
+            totalDeductionLabel.setVisible(false);
+            totalDeductionField.setVisible(false);
+            netPayLabel.setVisible(false);
+            netPayField.setVisible(false);
+        }
+
         // Update rate field based on selected employee rate
         employeeRateDropdown.addItemListener(new ItemListener() {
             @Override
@@ -189,28 +236,39 @@ class PayrollSystem {
                     double grossPay = rate * noOfDays + regularOT + holiday;
                     grossPayField.setText(String.valueOf(grossPay));
 
-                    double sss = grossPay * 0.02;
-                    sssField.setText(String.valueOf(sss));
+                    if ("June 16-30".equals(payPeriodDropdown.getSelectedItem())) {
+                        double sss = grossPay * 0.02;
+                        sssField.setText(String.valueOf(sss));
 
-                    double philHealth = grossPay * 0.05;
-                    philHealthField.setText(String.valueOf(philHealth));
+                        double philHealth = grossPay * 0.05;
+                        philHealthField.setText(String.valueOf(philHealth));
 
-                    double pagibig = grossPay * 0.01;
-                    pagibigField.setText(String.valueOf(pagibig));
+                        double pagibig = grossPay * 0.01;
+                        pagibigField.setText(String.valueOf(pagibig));
 
-                    double totalDeduction = sss + philHealth + pagibig + Double.parseDouble(otherDeductionField.getText());
-                    totalDeductionField.setText(String.valueOf(totalDeduction));
+                        double totalDeduction = sss + philHealth + pagibig;
+                        if (!otherDeductionField.getText().isEmpty()) {
+                            totalDeduction += Double.parseDouble(otherDeductionField.getText());
+                        }
+                        totalDeductionField.setText(String.valueOf(totalDeduction));
 
-                    double netPay = grossPay - totalDeduction;
-                    netPayField.setText(String.valueOf(netPay));
+                        double netPay = grossPay - totalDeduction;
+                        netPayField.setText(String.valueOf(netPay));
+                    } else {
+                        sssField.setText("");
+                        philHealthField.setText("");
+                        pagibigField.setText("");
+                        otherDeductionField.setText("");
+                        totalDeductionField.setText("");
+                        netPayField.setText("");
+                    }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(frame, "Please enter valid numbers.");
+                    JOptionPane.showMessageDialog(frame, "Please enter valid numbers", "Input Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
         frame.add(panel, new GridBagConstraints());
-        frame.pack();
         frame.setLocationRelativeTo(null); // Center the window on the screen
         frame.setVisible(true);
     }

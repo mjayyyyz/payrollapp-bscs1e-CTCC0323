@@ -4,71 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-// Separate class for the login form
-class LoginForm {
-    private JFrame loginFrame;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-
-    public LoginForm() {
-        loginFrame = new JFrame("Login");
-        loginFrame.setSize(400, 200);
-        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        loginFrame.setLayout(new GridBagLayout());
-
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-        panel.setPreferredSize(new Dimension(360, 160));
-
-        JLabel userLabel = new JLabel("Username:");
-        userLabel.setBounds(50, 30, 80, 25);
-        panel.add(userLabel);
-
-        usernameField = new JTextField(20);
-        usernameField.setBounds(150, 30, 160, 25);
-        panel.add(usernameField);
-
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setBounds(50, 70, 80, 25);
-        panel.add(passwordLabel);
-
-        passwordField = new JPasswordField(20);
-        passwordField.setBounds(150, 70, 160, 25);
-        panel.add(passwordField);
-
-        JButton loginButton = new JButton("Login");
-        loginButton.setBounds(150, 110, 80, 25);
-        panel.add(loginButton);
-
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-
-                // Perform simple username and password validation
-                if ("admin".equals(username) && "password".equals(password)) {
-                    loginFrame.dispose(); // Close the login form
-                    PayrollSystem.showPayrollSystem(); // Show the main payroll system
-                } else {
-                    JOptionPane.showMessageDialog(loginFrame, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        loginFrame.add(panel, new GridBagConstraints());
-        loginFrame.setLocationRelativeTo(null); // Center the window on the screen
-        loginFrame.setVisible(true);
-    }
-}
-
-class PayrollSystem {
+public class PayrollSystem {
     public static void main(String[] args) {
-        new LoginForm(); // Start with the login form
-    }
-
-    public static void showPayrollSystem() {
         JFrame frame = new JFrame("Payroll System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
@@ -100,7 +40,7 @@ class PayrollSystem {
         employeeRateLabel.setBounds(300, 10, 100, 25);
         panel.add(employeeRateLabel);
 
-        JComboBox<String> employeeRateDropdown = new JComboBox<>(new String[]{"Crew - 62.50", "Crew Chief - 63.50"});
+        JComboBox<String> employeeRateDropdown = new JComboBox<>(new String[]{"Regular Crew - 62.50", "Crew Chief - 63.50"});
         employeeRateDropdown.setBounds(400, 10, 160, 25);
         panel.add(employeeRateDropdown);
 
@@ -116,7 +56,7 @@ class PayrollSystem {
         // Regular & Over Time Pay Panel
         JPanel regularPanel = new JPanel();
         regularPanel.setBorder(BorderFactory.createTitledBorder("Regular & Over Time Pay"));
-        regularPanel.setBounds(10, 80, 370, 200);
+        regularPanel.setBounds(10, 80, 370, 250);
         regularPanel.setLayout(null);
         panel.add(regularPanel);
 
@@ -136,21 +76,37 @@ class PayrollSystem {
         noOfDaysField.setBounds(150, 50, 160, 25);
         regularPanel.add(noOfDaysField);
 
-        JLabel regularOTLabel = new JLabel("Over Time");
-        regularOTLabel.setBounds(10, 80, 80, 25);
+        JLabel noOfHoursLabel = new JLabel("No of Hours");
+        noOfHoursLabel.setBounds(10, 80, 80, 25);
+        regularPanel.add(noOfHoursLabel);
+
+        JTextField noOfHoursField = new JTextField(20);
+        noOfHoursField.setBounds(150, 80, 160, 25);
+        regularPanel.add(noOfHoursField);
+
+        JLabel regularOTLabel = new JLabel("Regular OT");
+        regularOTLabel.setBounds(10, 110, 80, 25);
         regularPanel.add(regularOTLabel);
 
         JTextField regularOTField = new JTextField(20);
-        regularOTField.setBounds(150, 80, 160, 25);
+        regularOTField.setBounds(150, 110, 160, 25);
         regularPanel.add(regularOTField);
 
         JLabel holidayLabel = new JLabel("Holiday");
-        holidayLabel.setBounds(10, 110, 80, 25);
+        holidayLabel.setBounds(10, 140, 80, 25);
         regularPanel.add(holidayLabel);
 
         JTextField holidayField = new JTextField(20);
-        holidayField.setBounds(150, 110, 160, 25);
+        holidayField.setBounds(150, 140, 160, 25);
         regularPanel.add(holidayField);
+
+        JLabel specialHolidayLabel = new JLabel("Special Holiday");
+        specialHolidayLabel.setBounds(10, 170, 120, 25);
+        regularPanel.add(specialHolidayLabel);
+
+        JTextField specialHolidayField = new JTextField(20);
+        specialHolidayField.setBounds(150, 170, 160, 25);
+        regularPanel.add(specialHolidayField);
 
         // Employee Contribution Panel
         JPanel empContributionPanel = new JPanel();
@@ -212,7 +168,7 @@ class PayrollSystem {
         // Separate panel for Gross Pay
         JPanel grossPayPanel = new JPanel();
         grossPayPanel.setBorder(BorderFactory.createTitledBorder("Gross Pay"));
-        grossPayPanel.setBounds(10, 290, 760, 100);
+        grossPayPanel.setBounds(10, 340, 760, 100);
         grossPayPanel.setLayout(null);
         panel.add(grossPayPanel);
 
@@ -226,8 +182,8 @@ class PayrollSystem {
         grossPayPanel.add(grossPayField);
 
         // Capture Button
-        JButton captureButton = new JButton("Calculate");
-        captureButton.setBounds(350, 400, 100, 25);
+        JButton captureButton = new JButton("Capture");
+        captureButton.setBounds(350, 450, 100, 25);
         panel.add(captureButton);
 
         // Add logic to show/hide deduction fields based on pay period selection
@@ -235,19 +191,19 @@ class PayrollSystem {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    boolean isSecondHalf = "16-30".equals(payPeriodDropdown.getSelectedItem());
-                    sssLabel.setVisible(isSecondHalf);
-                    sssField.setVisible(isSecondHalf);
-                    philHealthLabel.setVisible(isSecondHalf);
-                    philHealthField.setVisible(isSecondHalf);
-                    pagibigLabel.setVisible(isSecondHalf);
-                    pagibigField.setVisible(isSecondHalf);
-                    otherDeductionLabel.setVisible(isSecondHalf);
-                    otherDeductionField.setVisible(isSecondHalf);
-                    totalDeductionLabel.setVisible(isSecondHalf);
-                    totalDeductionField.setVisible(isSecondHalf);
-                    netPayLabel.setVisible(isSecondHalf);
-                    netPayField.setVisible(isSecondHalf);
+                    boolean is16to30 = "16-30".equals(payPeriodDropdown.getSelectedItem());
+                    sssLabel.setVisible(is16to30);
+                    sssField.setVisible(is16to30);
+                    philHealthLabel.setVisible(is16to30);
+                    philHealthField.setVisible(is16to30);
+                    pagibigLabel.setVisible(is16to30);
+                    pagibigField.setVisible(is16to30);
+                    otherDeductionLabel.setVisible(is16to30);
+                    otherDeductionField.setVisible(is16to30);
+                    totalDeductionLabel.setVisible(is16to30);
+                    totalDeductionField.setVisible(is16to30);
+                    netPayLabel.setVisible(is16to30);
+                    netPayField.setVisible(is16to30);
                 }
             }
         });
@@ -275,7 +231,7 @@ class PayrollSystem {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     String selectedItem = (String) employeeRateDropdown.getSelectedItem();
                     if (selectedItem != null) {
-                        if (selectedItem.startsWith("Crew - 62.50")) {
+                        if (selectedItem.startsWith("Regular Crew - 62.50")) {
                             rateField.setText("62.50");
                         } else if (selectedItem.startsWith("Crew Chief - 63.50")) {
                             rateField.setText("63.50");
@@ -290,32 +246,37 @@ class PayrollSystem {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    double rate = Double.parseDouble(rateField.getText());
-                    double noOfDays = Double.parseDouble(noOfDaysField.getText());
-                    double regularOT = Double.parseDouble(regularOTField.getText());
-                    double holiday = Double.parseDouble(holidayField.getText());
+                    BigDecimal rate = new BigDecimal(rateField.getText());
+                    BigDecimal noOfDays = new BigDecimal(noOfDaysField.getText());
+                    BigDecimal noOfHours = new BigDecimal(noOfHoursField.getText());
+                    BigDecimal regularOT = new BigDecimal(regularOTField.getText());
+                    BigDecimal holiday = new BigDecimal(holidayField.getText());
+                    BigDecimal specialHoliday = new BigDecimal(specialHolidayField.getText());
 
-                    double grossPay = rate * noOfDays + regularOT + holiday;
-                    grossPayField.setText(String.valueOf(grossPay));
+                    BigDecimal dayHoursPay = rate.multiply(noOfDays).multiply(noOfHours);
+                    BigDecimal holidayPay = holiday.multiply(rate).multiply(new BigDecimal("0.3"));
+                    BigDecimal specialHolidayPay = specialHoliday.multiply(rate).multiply(new BigDecimal("2"));
+
+                    BigDecimal grossPay = dayHoursPay.add(regularOT).add(holidayPay).add(specialHolidayPay);
+                    grossPayField.setText(grossPay.setScale(2, RoundingMode.HALF_UP).toString());
 
                     if ("16-30".equals(payPeriodDropdown.getSelectedItem())) {
-                        double sss = grossPay * 0.02;
-                        sssField.setText(String.valueOf(sss));
+                        BigDecimal sss = grossPay.multiply(new BigDecimal("0.04")).setScale(2, RoundingMode.HALF_UP);
+                        sssField.setText(sss.toString());
 
-                        double philHealth = grossPay * 0.05;
-                        philHealthField.setText(String.valueOf(philHealth));
+                        BigDecimal philHealth = grossPay.multiply(new BigDecimal("0.05")).setScale(2, RoundingMode.HALF_UP);
+                        philHealthField.setText(philHealth.toString());
 
-                        double pagibig = grossPay * 0.01;
-                        pagibigField.setText(String.valueOf(pagibig));
+                        BigDecimal pagibig = grossPay.multiply(new BigDecimal("0.02")).setScale(2, RoundingMode.HALF_UP);
+                        pagibigField.setText(pagibig.toString());
 
-                        double totalDeduction = sss + philHealth + pagibig;
-                        if (!otherDeductionField.getText().isEmpty()) {
-                            totalDeduction += Double.parseDouble(otherDeductionField.getText());
-                        }
-                        totalDeductionField.setText(String.valueOf(totalDeduction));
+                        BigDecimal otherDeduction = new BigDecimal(otherDeductionField.getText().isEmpty() ? "0" : otherDeductionField.getText());
 
-                        double netPay = grossPay - totalDeduction;
-                        netPayField.setText(String.valueOf(netPay));
+                        BigDecimal totalDeduction = sss.add(philHealth).add(pagibig).add(otherDeduction);
+                        totalDeductionField.setText(totalDeduction.setScale(2, RoundingMode.HALF_UP).toString());
+
+                        BigDecimal netPay = grossPay.subtract(totalDeduction);
+                        netPayField.setText(netPay.setScale(2, RoundingMode.HALF_UP).toString());
                     } else {
                         sssField.setText("");
                         philHealthField.setText("");
@@ -324,6 +285,37 @@ class PayrollSystem {
                         totalDeductionField.setText("");
                         netPayField.setText("");
                     }
+
+                    // Create and display the payslip window
+                    JFrame payslipFrame = new JFrame("Payslip");
+                    payslipFrame.setSize(400, 300);
+                    payslipFrame.setLayout(new GridBagLayout());
+                    JPanel payslipPanel = new JPanel();
+                    payslipPanel.setLayout(new BoxLayout(payslipPanel, BoxLayout.Y_AXIS));
+
+                    // Calculate total hours present
+                    BigDecimal totalHours = noOfDays.multiply(noOfHours);
+                    payslipPanel.add(new JLabel("Employee No: " + idField.getText()));
+                    payslipPanel.add(new JLabel("Employee Name: " + empField.getText()));
+                    payslipPanel.add(new JLabel("No. of Days Present: " + noOfDaysField.getText()));
+                    payslipPanel.add(new JLabel("Total Hours Present: " + totalHours.setScale(2, RoundingMode.HALF_UP)));
+                    payslipPanel.add(new JLabel("Rate per Hour: " + rateField.getText()));
+                    payslipPanel.add(new JLabel("Gross Income: " + grossPayField.getText()));
+
+                    if ("16-30".equals(payPeriodDropdown.getSelectedItem())) {
+                        payslipPanel.add(new JLabel("Deductions:"));
+                        payslipPanel.add(new JLabel("SSS: " + sssField.getText()));
+                        payslipPanel.add(new JLabel("Phil-Health: " + philHealthField.getText()));
+                        payslipPanel.add(new JLabel("Pagibig: " + pagibigField.getText()));
+                        payslipPanel.add(new JLabel("Other Deduction: " + otherDeductionField.getText()));
+                        payslipPanel.add(new JLabel("Total Deduction: " + totalDeductionField.getText()));
+                        payslipPanel.add(new JLabel("Net Pay: " + netPayField.getText()));
+                    }
+
+                    payslipFrame.add(payslipPanel, new GridBagConstraints());
+                    payslipFrame.setLocationRelativeTo(frame); // Center relative to main frame
+                    payslipFrame.setVisible(true);
+
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame, "Please enter valid numbers", "Input Error", JOptionPane.ERROR_MESSAGE);
                 }

@@ -316,11 +316,12 @@ class PayrollSystem {
                 BigDecimal rate = new BigDecimal(rateField.getText());
                 BigDecimal noOfDays = new BigDecimal(noOfDaysField.getText());
                 BigDecimal noOfHours = new BigDecimal(noOfHoursField.getText());
-                BigDecimal regularOT = new BigDecimal(regularOTField.getText());
+                BigDecimal regularOT = new BigDecimal(regularOTField.getText().isEmpty() ? "0" : regularOTField.getText());
                 BigDecimal holiday = new BigDecimal(holidayField.getText().isEmpty() ? "0" : holidayField.getText());
                 BigDecimal specialHoliday = new BigDecimal(specialHolidayField.getText().isEmpty() ? "0" : specialHolidayField.getText());
 
                 BigDecimal dayHoursPay = rate.multiply(noOfDays).multiply(noOfHours);
+                BigDecimal regularOTPay = regularOT.multiply(rate).multiply(new BigDecimal("0.25"));
                 BigDecimal holidayPay = holiday.multiply(rate).multiply(new BigDecimal("0.3"));
                 BigDecimal specialHolidayPay = specialHoliday.multiply(rate).multiply(new BigDecimal("2"));
 
@@ -365,17 +366,22 @@ class PayrollSystem {
                 BigDecimal totalHours = noOfDays.multiply(noOfHours);
                 payslipPanel.add(new JLabel("Employee No: " + idField.getText()));
                 payslipPanel.add(new JLabel("Employee Name: " + empField.getText()));
+                payslipPanel.add(new JLabel(" "));
                 payslipPanel.add(new JLabel("No. of Days Present: " + noOfDaysField.getText()));
                 payslipPanel.add(new JLabel("Total Hours Present: " + totalHours.setScale(2, RoundingMode.HALF_UP)));
                 payslipPanel.add(new JLabel("Rate per Hour: " + rateField.getText()));
+                payslipPanel.add(new JLabel(""));
                 payslipPanel.add(new JLabel("Gross Income: " + grossIncomeField.getText()));
+                payslipPanel.add(new JLabel("Net Pay: " + netPayField.getText()));
 
                 if ("16-30".equals(payPeriodDropdown.getSelectedItem())) {
+                    payslipPanel.add(new JLabel(" "));
                     payslipPanel.add(new JLabel("Deductions:"));
                     payslipPanel.add(new JLabel("SSS: " + sssField.getText()));
                     payslipPanel.add(new JLabel("Phil-Health: " + philHealthField.getText()));
                     payslipPanel.add(new JLabel("Pagibig: " + pagibigField.getText()));
                     payslipPanel.add(new JLabel("Other Deduction: " + otherDeductionField.getText()));
+                    payslipPanel.add(new JLabel(" "));
                     payslipPanel.add(new JLabel("Total Deduction: " + totalDeductionField.getText()));
                     payslipPanel.add(new JLabel("Net Pay: " + netPayField.getText()));
                 }

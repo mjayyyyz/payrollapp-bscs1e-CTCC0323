@@ -259,9 +259,9 @@ class PayrollSystem {
         grossIncomeField.setEditable(false); // Make non-editable
         totalIncomePanel.add(grossIncomeField);
 
-        JLabel netPayLabel = new JLabel("Net Pay");
-        netPayLabel.setBounds(10, 50, 120, 25);
-        totalIncomePanel.add(netPayLabel);
+        JLabel netPaysLabel = new JLabel("Net Pay");
+        netPaysLabel.setBounds(10, 50, 120, 25);
+        totalIncomePanel.add(netPaysLabel);
 
         JTextField netPayField = new JTextField(20);
         netPayField.setBounds(150, 50, 160, 25);
@@ -390,7 +390,8 @@ class PayrollSystem {
                 payslipPanel.add(new JLabel("Rate per Hour: " + rateField.getText()));
                 payslipPanel.add(new JLabel(" "));
                 payslipPanel.add(new JLabel("Gross Income: " + grossIncomeField.getText()));
-                payslipPanel.add(new JLabel("Net Pay: " + netPayField.getText()));
+
+
 
                 if ("16-30".equals(payPeriodDropdown.getSelectedItem())) {
                     payslipPanel.add(new JLabel(" "));
@@ -401,7 +402,15 @@ class PayrollSystem {
                     payslipPanel.add(new JLabel("Other Deduction: " + otherDeductionField.getText()));
                     payslipPanel.add(new JLabel(" "));
                     payslipPanel.add(new JLabel("Total Deduction: " + totalDeductionField.getText()));
-                    payslipPanel.add(new JLabel("Net Pay: " + netPayField.getText()));
+
+                    // Create a new Font for Net Pay (example: Arial, bold, size 16)
+                    Font netPayFont = new Font("Times New Roman", Font.BOLD, 20); // Adjust font name and size as needed
+
+                    JLabel netPayLabel = new JLabel("Net Pay: " + netPayField.getText());
+                    netPayLabel.setFont(netPayFont); // Set the custom font
+                    payslipPanel.add(netPayLabel);
+
+
                 }
 
                 payslipFrame.add(payslipPanel, new GridBagConstraints());

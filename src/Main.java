@@ -77,6 +77,14 @@ class PayrollSystem {
         frame.setResizable(false); // Make window size fixed
         frame.setLayout(new GridBagLayout()); // Center all elements
 
+        // Create a menubar
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        JMenuItem logoutMenuItem = new JMenuItem("Logout");
+        menu.add(logoutMenuItem);
+        menuBar.add(menu);
+        frame.setJMenuBar(menuBar);
+
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setPreferredSize(new Dimension(760, 430)); // Fix panel size within the window
@@ -265,12 +273,8 @@ class PayrollSystem {
         printButton.setBounds(628, 353, 110, 25);
         panel.add(printButton);
 
-        JButton logoutButton = new JButton("Logout");
-        logoutButton.setBounds(680, 0, 80, 20);
-        panel.add(logoutButton);
-
-        // Add action listener for the logout button
-        logoutButton.addActionListener(e -> {
+        // Add action listener for the logout menu item
+        logoutMenuItem.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (response == JOptionPane.YES_OPTION) {
                 frame.dispose();

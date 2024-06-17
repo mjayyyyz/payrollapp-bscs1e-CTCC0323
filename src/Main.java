@@ -370,7 +370,7 @@ class PayrollSystem {
 
                 // Create and display the payslip window
                 JFrame payslipFrame = new JFrame("Payslip");
-                payslipFrame.setSize(230, 300);
+                payslipFrame.setSize(230, 350);
                 payslipFrame.setLayout(new GridBagLayout());
                 payslipFrame.setResizable(false);
                 JPanel payslipPanel = new JPanel();

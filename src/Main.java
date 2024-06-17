@@ -260,10 +260,24 @@ class PayrollSystem {
         netPayField.setEditable(false); // Make non-editable
         totalIncomePanel.add(netPayField);
 
-        // Separate panel for Print PaySlip Button
-        JButton printButton = new JButton("Print PaySlip");
-        printButton.setBounds(630, 353, 110, 25);
+        // for Calculate Button
+        JButton printButton = new JButton("Calculate");
+        printButton.setBounds(628, 353, 110, 25);
         panel.add(printButton);
+
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.setBounds(680, 0, 80, 20);
+        panel.add(logoutButton);
+
+        // Add action listener for the logout button
+        logoutButton.addActionListener(e -> {
+            int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to logout?", "Logout Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION) {
+                frame.dispose();
+                showLoginForm();
+            }
+        });
+
 
         // Add logic to show/hide deduction fields based on pay period selection
         payPeriodDropdown.addItemListener(e -> {
@@ -370,7 +384,7 @@ class PayrollSystem {
                 payslipPanel.add(new JLabel("No. of Days Present: " + noOfDaysField.getText()));
                 payslipPanel.add(new JLabel("Total Hours Present: " + totalHours.setScale(2, RoundingMode.HALF_UP)));
                 payslipPanel.add(new JLabel("Rate per Hour: " + rateField.getText()));
-                payslipPanel.add(new JLabel(""));
+                payslipPanel.add(new JLabel(" "));
                 payslipPanel.add(new JLabel("Gross Income: " + grossIncomeField.getText()));
                 payslipPanel.add(new JLabel("Net Pay: " + netPayField.getText()));
 
